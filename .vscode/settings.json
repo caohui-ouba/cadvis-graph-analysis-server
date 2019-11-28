@@ -1,7 +1,0 @@
-{
-    "python.linting.pylintEnabled": false,
-    "python.linting.mypyEnabled": false,
-    "python.linting.flake8CategorySeverity.W": "Error",
-    "python.linting.pycodestyleCategorySeverity.W": "Error",
-    "python.linting.flake8Enabled": true,
-}
