@@ -1,7 +1,12 @@
 from flask import Flask, request, current_app
-from entity.entity import Node, Edge, Graph
-from obtain.data_obain import get_soc_blog_catalog
+from obtain.data_obtain import get_soc_blog_catalog
 from response.response import Response
+import service.service as service
+from config.logging import config_log
+
+# config the log
+config_log()
+
 app = Flask(__name__)
 
 
@@ -13,7 +18,7 @@ def hello_world():
 
 @app.route('/test', methods=['GET'])
 def test_global():
-    return Response.success(2, current_app.config['name'])
+    return Response.success(1, "success", current_app.config['soc_blog_graph'])
 
 
 @app.route('/test2', methods=['GET'])
@@ -24,4 +29,7 @@ def test_global2():
 if __name__ == '__main__':
     with app.app_context():
         soc_blog_graph = get_soc_blog_catalog("./data/soc-BlogCatalog.mtx")
-        app.run(debug=True, host="127.0.0.1", port=5000)
+        model = service.node2vec(soc_blog_graph, "./model/soc_blog_model")
+        model.wv.most_similar(2)
+        #current_app.config["soc_blog_graph"] = soc_blog_graph
+        #app.run(debug=True, host="127.0.0.1", port=5000)

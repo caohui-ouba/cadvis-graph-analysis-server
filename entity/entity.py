@@ -5,21 +5,16 @@ class Node(object):
         self.vec = []
         self.neighbours = []
 
-    def add_neighbour(self, nei):
-        if type(nei) != Node:
-            raise AttributeError(
-                "the arrgument 'nei' in method add_neighbour is not type Node !")
-            self.vec.insert(nei)
+    def add_neighbour(self, node_id):
+        self.neighbours.append(node_id)
 
 
 class Edge(object):
 
-    def __init__(self, start, end):
+    def __init__(self, start_node_id, end_node_id):
         """ Receive 2 arguments from and to node."""
-        if type(start) != Node or type(end) != Node:
-            raise AttributeError("start or end is node the type Node!")
-        self.start = start
-        self.end = end
+        self.start = start_node_id
+        self.end = end_node_id
 
 
 class Graph(object):
@@ -42,3 +37,4 @@ class Graph(object):
         if type(edge) != Edge:
             raise AttributeError(
                 "the arrgument 'edge' in method add_edge is not type Edge !")
+        self.edges.append(edge)
