@@ -29,7 +29,8 @@ def test_global2():
 if __name__ == '__main__':
     with app.app_context():
         soc_blog_graph = get_soc_blog_catalog("./data/soc-BlogCatalog.mtx")
-        model = service.node2vec(soc_blog_graph, "./model/soc_blog_model")
-        model.wv.most_similar(2)
+        print(len(soc_blog_graph.nodes()))
+        model = service.node2vec(soc_blog_graph, "./dump/model/soc_blog_model")
+        # model.wv.most_similar(2)
         # current_app.config["soc_blog_graph"] = soc_blog_graph
         # app.run(debug=True, host="127.0.0.1", port=5000)

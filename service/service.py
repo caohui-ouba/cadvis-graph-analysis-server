@@ -13,10 +13,11 @@ def node2vec(graph: nx.Graph, model_path: str, dimensions: int = 3, walk_length:
                             walk_length=walk_length, num_walks=num_walks, workers=workers, temp_folder="./temp")
         model = node2vec.fit(workers=workers)
         model.save(model_path)
-        logging.info("saved model to path '%s'." % model_path)
+        logging.info("Saved model to file '%s'." % model_path)
     else:
         # The model is saved before, load it directly.
         if os.path.isfile(model_path) is False:
             raise FileNotFoundError("The path %s is not a file !" % model_path)
         model = Word2Vec.load(model_path)
+        logging.info("Loaded model from file '%s'. " % model_path)
     return model
