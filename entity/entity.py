@@ -9,14 +9,6 @@ class Node(object):
         self.neighbours.append(node_id)
 
 
-class Edge(object):
-
-    def __init__(self, start_node_id, end_node_id):
-        """ Receive 2 arguments from and to node."""
-        self.start = start_node_id
-        self.end = end_node_id
-
-
 class Graph(object):
 
     def __init__(self):
@@ -34,7 +26,4 @@ class Graph(object):
         return self.nodes[id]
 
     def add_edge(self, edge):
-        if type(edge) != Edge:
-            raise AttributeError(
-                "the arrgument 'edge' in method add_edge is not type Edge !")
         self.edges.append(edge)

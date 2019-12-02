@@ -1,3 +1,1 @@
-import os
-print(os.path.isfile('./model/soc_blog_model'))
-print(os.path.exists('./model/soc_blog_model'))
+print([1, 2, 3] + [3, 4, 5])
