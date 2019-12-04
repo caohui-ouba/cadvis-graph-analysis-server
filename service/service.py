@@ -5,8 +5,11 @@ import numpy as np
 from gensim.models.word2vec import Word2Vec
 from flask import current_app
 from sklearn.decomposition import PCA
+from algorithm.search_community import PyLouvain
+from algorithm.similar_structure import get_similar_structure
 import logging
 import os
+import pickle
 
 
 def node2vec(graph: nx.Graph, model_path: str, dimensions: int = 20, walk_length: int = 80, num_walks: int = 10, workers: int = 4):
@@ -49,6 +52,30 @@ def get_graph_model_by_name(graph_name: str):
     if "soc_blog_catalog" == graph_name:
         return current_app.config["soc_blog_graph"], current_app.config["soc_blog_model"]
     return None, None
+
+
+def get_similar_struc(name: str, nodes: list, k: int):
+    return get_similar_structure(name, nodes, k)
+
+
+def get_patition_model_by_name(name: str, path: str):
+    """
+    If dumped the partition before, load the partition directly,
+    if not , use algrithm to search partition first, then dump it to file while the method's param specific.
+    """
+    partition = None
+    if os.path.exists(path):
+        pickle_file = open(path, 'rb')
+        partition = pickle.load(pickle_file)
+        logging.info("Loaded partition from file '%s'." % path)
+    else:
+        graph, model = get_graph_model_by_name(name)
+        alg = PyLouvain.from_graph(graph)
+        partition, q = alg.apply_method()
+        dump_file = open(path, 'wb')
+        pickle.dump(partition, dump_file)
+        logging.info("Dumped partition to file '%s' " % path)
+    return partition
 
 
 def decomposition(X: list, n_component: int = 2):

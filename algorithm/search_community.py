@@ -1,3 +1,6 @@
+import networkx as nx
+
+
 class PyLouvain:
 
     @classmethod
@@ -23,7 +26,7 @@ class PyLouvain:
             edges.append(((n[0], n[1]), w))
         # rebuild graph with successive identifiers
         nodes_, edges_ = in_order(nodes, edges)
-        print("%d nodes, %d edges" % (len(nodes_), len(edges_)))
+        # print("%d nodes, %d edges" % (len(nodes_), len(edges_)))
         return cls(nodes_, edges_)
 
     @classmethod
@@ -60,8 +63,19 @@ class PyLouvain:
                 current_edge = (-1, -1, 1)
                 in_edge = 0
         nodes, edges = in_order(nodes, edges)
-        print("%d nodes, %d edges" % (len(nodes), len(edges)))
+        # print("%d nodes, %d edges" % (len(nodes), len(edges)))
         return cls(nodes, edges)
+
+    @classmethod
+    def from_graph(cls, graph: nx.Graph):
+        nodes = {}
+        edges = []
+        for node_id in graph.nodes:
+            nodes[str(node_id)] = 1
+        for edge in graph.edges:
+            edges.append(((str(edge[0]), str(edge[1])), 1))
+        nodes_, edges_ = in_order(nodes, edges)
+        return cls(nodes_, edges_)
 
     def __init__(self, nodes, edges):
         '''
@@ -103,7 +117,7 @@ class PyLouvain:
         best_q = -1
         i = 1
         while 1:
-            # print("pass #%d" % i)
+            print("pass #%d" % i)
             i += 1
             partition = self.first_phase(network)
             q = self.compute_modularity(partition)
@@ -302,5 +316,6 @@ def in_order(nodes, edges):
         i += 1
     edges_ = []
     for e in edges:
+        print(e)
         edges_.append(((d[e[0][0]], d[e[0][1]]), e[1]))
     return (nodes_, edges_)

@@ -45,7 +45,13 @@ if __name__ == "__main__":
         soc_blog_graph = get_soc_blog_catalog("./data/soc-BlogCatalog.mtx")
         soc_blog_model = service.node2vec(
             soc_blog_graph, "./dump/model/soc_blog_model")
-        # print(soc_blog_model.wv.most_similar("219"))
+
+        # print(patition)
+        # print("the shape of parition is %s ." % np.shape(patition))
+        # print("the q is %s" % q)
         current_app.config["soc_blog_graph"] = soc_blog_graph
         current_app.config["soc_blog_model"] = soc_blog_model
+        # partition = service.get_patition_model_by_name(
+        #     'soc_blog_catalog', './dump/community/soc_blog_community')
+        # print(partition)
         app.run(debug=True, host="127.0.0.1", port=5000)

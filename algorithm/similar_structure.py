@@ -1,5 +1,6 @@
 
-from service.service import get_graph_model_by_name
+# from service.service import get_graph_model_by_name
+import service.service as service
 import networkx as nx
 
 
@@ -8,7 +9,7 @@ def get_similar_structure(graph_name: str, nodes: list, k: int):
     Accordiing to the Paper Structure-Based Suggestive Exploration :A New Approach for Effective Exploration of Large Networks.
     Impliment the algrithem of this paper to find a similar structure with given structure.
     """
-    graph, model = get_graph_model_by_name(graph_name)
+    graph, model = service.get_graph_model_by_name(graph_name)
     gsim = []
     for node_id in nodes:
         similar_k = model.wv.most_similar(positive=[str(node_id)], topn=k)
