@@ -316,6 +316,5 @@ def in_order(nodes, edges):
         i += 1
     edges_ = []
     for e in edges:
-        print(e)
         edges_.append(((d[e[0][0]], d[e[0][1]]), e[1]))
     return (nodes_, edges_)

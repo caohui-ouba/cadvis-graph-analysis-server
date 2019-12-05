@@ -40,3 +40,30 @@ def get_soc_blog_catalog(path):
         pickle.dump(graph, pickle_file)
         logging.info("dump graph to file '%s'" % DUMP_PATH)
     return graph
+
+
+def get_mock_commutity_graph(path):
+    DUMP_PATH = './dump/graph/mock_commutity_graph'
+    graph = None
+    if os.path.exists(DUMP_PATH):
+        pickle_file = open(DUMP_PATH, 'rb')
+        graph = pickle.load(pickle_file)
+        logging.info(
+            "loadded mock_commutity_graph from file '%s'." % DUMP_PATH)
+    else:
+        with open(path, 'r') as file:
+            lines = file.readlines()
+            graph = nx.Graph()
+            edges = []
+            for idx in range(len(lines)):
+                if idx == 0:
+                    graph.add_nodes_from(
+                        [i + 1 for i in range(int(lines[idx]))])
+                elif idx > 1:
+                    e = lines[idx].split(' ')
+                    edges.append((int(e[0]), int(e[1])))
+            graph.add_edges_from(edges)
+            pickle_file = open(DUMP_PATH, 'wb')
+            pickle.dump(graph, pickle_file)
+            logging.info("Dump graph to file '%s'." % DUMP_PATH)
+    return graph

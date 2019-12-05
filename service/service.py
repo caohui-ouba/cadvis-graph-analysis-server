@@ -30,7 +30,8 @@ def node2vec(graph: nx.Graph, model_path: str, dimensions: int = 20, walk_length
     return model
 
 
-def get_graph(nxGraph: nx.Graph, model: Word2Vec):
+def get_graph_by_name(name: str):
+    nxGraph, model = get_graph_model_by_name(name)
     graph = Graph()
     X = []
     for i in range(len(nxGraph.nodes)):
@@ -51,11 +52,21 @@ def get_graph(nxGraph: nx.Graph, model: Word2Vec):
 def get_graph_model_by_name(graph_name: str):
     if "soc_blog_catalog" == graph_name:
         return current_app.config["soc_blog_graph"], current_app.config["soc_blog_model"]
+    elif "mock_community_graph" == graph_name:
+        return current_app.config["mock_community_graph"], current_app.config["mock_community_model"]
     return None, None
 
 
 def get_similar_struc(name: str, nodes: list, k: int):
     return get_similar_structure(name, nodes, k)
+
+
+def get_commutity_by_name(name: str):
+    if 'soc_blog_catalog' == name:
+        return get_patition_model_by_name(name, './dump/community/soc_blog_community')
+    elif 'mock_community_graph' == name:
+        return get_patition_model_by_name(name, './dump/community/mock_community_graph')
+    return None
 
 
 def get_patition_model_by_name(name: str, path: str):
@@ -66,7 +77,11 @@ def get_patition_model_by_name(name: str, path: str):
     partition = None
     if os.path.exists(path):
         pickle_file = open(path, 'rb')
-        partition = pickle.load(pickle_file)
+        loaded = pickle.load(pickle_file)
+        partition = []
+        for arr in loaded:
+            partition.append([a + 1 for a in arr])
+
         logging.info("Loaded partition from file '%s'." % path)
     else:
         graph, model = get_graph_model_by_name(name)
