@@ -35,6 +35,7 @@ current = 0
 for size in partitions_size:
     edges_cnt = range(random.randint(int(size * size / 20),
                                      int(size * size / 10)))
+    print("edges cnt = %s." % edges_cnt)
     edge_s = []
     print(current + 1, current + size)
     for _ in edges_cnt:
@@ -49,7 +50,7 @@ for size in partitions_size:
 """社团之间构造稀疏的边 ,5 - 20条"""
 for idx in range(partition_cnt):
     for other in range(idx + 1, partition_cnt):
-        edge_cnt = random.randint(5, 20)
+        edge_cnt = random.randint(2, 3)
         edge_s = []
         for _ in range(edge_cnt):
             edge = (random.randint(partitions_range[idx][0], partitions_range[idx][1]), random.randint(

@@ -168,9 +168,12 @@ class PyLouvain:
         '''
         # make initial partition
         best_partition = self.make_initial_partition(network)
+
         while 1:
             improvement = 0
             for node in network[0]:
+                if node not in self.edges_of_node:
+                    continue
                 node_community = self.communities[node]
                 # default best community is its own
                 best_community = node_community
@@ -178,6 +181,7 @@ class PyLouvain:
                 # remove _node from its community
                 best_partition[node_community].remove(node)
                 best_shared_links = 0
+
                 for e in self.edges_of_node[node]:
                     if e[0][0] == e[0][1]:
                         continue
@@ -307,7 +311,6 @@ def in_order(nodes, edges):
     # rebuild graph with successive identifiers
     nodes = list(nodes.keys())
     nodes.sort(key=cmp)
-    print(nodes)
     i = 0
     nodes_ = []
     d = {}

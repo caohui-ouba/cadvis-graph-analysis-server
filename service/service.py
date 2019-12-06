@@ -75,20 +75,20 @@ def get_patition_model_by_name(name: str, path: str):
     if not , use algrithm to search partition first, then dump it to file while the method's param specific.
     """
     partition = None
-    # if os.path.exists(path):
-    #     pickle_file = open(path, 'rb')
-    #     partition = pickle.load(pickle_file)
-    #     logging.info("Loaded partition from file '%s'." % path)
-    # else:
-    graph, model = get_graph_model_by_name(name)
-    alg = PyLouvain.from_graph(graph)
-    res, q = alg.apply_method()
-    partition = []
-    for arr in res:
-        partition.append([a + 1 for a in arr])
-    dump_file = open(path, 'wb')
-    pickle.dump(partition, dump_file)
-    logging.info("Dumped partition to file '%s' " % path)
+    if os.path.exists(path):
+        pickle_file = open(path, 'rb')
+        partition = pickle.load(pickle_file)
+        logging.info("Loaded partition from file '%s'." % path)
+    else:
+        graph, model = get_graph_model_by_name(name)
+        alg = PyLouvain.from_graph(graph)
+        res, q = alg.apply_method()
+        partition = []
+        for arr in res:
+            partition.append([a + 1 for a in arr])
+        dump_file = open(path, 'wb')
+        pickle.dump(partition, dump_file)
+        logging.info("Dumped partition to file '%s' " % path)
     return partition
 
 
