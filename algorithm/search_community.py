@@ -306,7 +306,8 @@ def in_order(nodes, edges):
     '''
     # rebuild graph with successive identifiers
     nodes = list(nodes.keys())
-    nodes.sort()
+    nodes.sort(key=cmp)
+    print(nodes)
     i = 0
     nodes_ = []
     d = {}
@@ -318,3 +319,7 @@ def in_order(nodes, edges):
     for e in edges:
         edges_.append(((d[e[0][0]], d[e[0][1]]), e[1]))
     return (nodes_, edges_)
+
+
+def cmp(key):
+    return int(key)

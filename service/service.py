@@ -5,6 +5,7 @@ import numpy as np
 from gensim.models.word2vec import Word2Vec
 from flask import current_app
 from sklearn.decomposition import PCA
+from sklearn import manifold
 from algorithm.search_community import PyLouvain
 from algorithm.similar_structure import get_similar_structure
 import logging
@@ -38,7 +39,6 @@ def get_graph_by_name(name: str):
         X.append(model.wv.get_vector(str(i + 1)))
 
     X_2 = sigmoid(decomposition(X))
-
     for node_id in nxGraph.nodes():
         node = Node(node_id)
         """node_id index from 1 but X_2 index from 0."""
@@ -75,21 +75,20 @@ def get_patition_model_by_name(name: str, path: str):
     if not , use algrithm to search partition first, then dump it to file while the method's param specific.
     """
     partition = None
-    if os.path.exists(path):
-        pickle_file = open(path, 'rb')
-        loaded = pickle.load(pickle_file)
-        partition = []
-        for arr in loaded:
-            partition.append([a + 1 for a in arr])
-
-        logging.info("Loaded partition from file '%s'." % path)
-    else:
-        graph, model = get_graph_model_by_name(name)
-        alg = PyLouvain.from_graph(graph)
-        partition, q = alg.apply_method()
-        dump_file = open(path, 'wb')
-        pickle.dump(partition, dump_file)
-        logging.info("Dumped partition to file '%s' " % path)
+    # if os.path.exists(path):
+    #     pickle_file = open(path, 'rb')
+    #     partition = pickle.load(pickle_file)
+    #     logging.info("Loaded partition from file '%s'." % path)
+    # else:
+    graph, model = get_graph_model_by_name(name)
+    alg = PyLouvain.from_graph(graph)
+    res, q = alg.apply_method()
+    partition = []
+    for arr in res:
+        partition.append([a + 1 for a in arr])
+    dump_file = open(path, 'wb')
+    pickle.dump(partition, dump_file)
+    logging.info("Dumped partition to file '%s' " % path)
     return partition
 
 
@@ -98,6 +97,12 @@ def decomposition(X: list, n_component: int = 2):
     pca.fit(X)
     res = pca.fit_transform(X)
     return res
+
+
+def decomposition_by_tsne(X: list, n_component: int = 2):
+    embeded = manifold.TSNE(n_components=n_component,
+                            random_state=1).fit_transform(X)
+    return embeded
 
 
 def sigmoid(X):

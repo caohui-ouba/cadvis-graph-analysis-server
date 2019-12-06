@@ -9,7 +9,7 @@ import random
 partition_cnt = random.randint(10, 20)
 
 """每个社团 50-200个节点 """
-partitions_size = [random.randint(50, 150) for _ in range(partition_cnt)]
+partitions_size = [random.randint(50, 200) for _ in range(partition_cnt)]
 
 node_size = sum(partitions_size)
 
@@ -36,6 +36,7 @@ for size in partitions_size:
     edges_cnt = range(random.randint(int(size * size / 20),
                                      int(size * size / 10)))
     edge_s = []
+    print(current + 1, current + size)
     for _ in edges_cnt:
         edge = (random.randint(current + 1, current + size),
                 random.randint(current + 1, current + size))
