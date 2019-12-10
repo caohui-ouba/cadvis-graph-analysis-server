@@ -8,6 +8,7 @@ from sklearn.decomposition import PCA
 from sklearn import manifold
 from algorithm.search_community import PyLouvain
 from algorithm.similar_structure import get_similar_structure
+from algorithm.structure_correspond import find_structure_correspond
 import logging
 import os
 import pickle
@@ -58,7 +59,10 @@ def get_graph_model_by_name(graph_name: str):
 
 
 def get_similar_struc(name: str, nodes: list, k: int):
-    return get_similar_structure(name, nodes, k)
+    graph, model = get_graph_model_by_name(name)
+    compoments = get_similar_structure(name, nodes, k)
+    correspond = find_structure_correspond(nodes, model, compoments)
+    return {"compoments": compoments, "correspond": correspond}
 
 
 def get_commutity_by_name(name: str):

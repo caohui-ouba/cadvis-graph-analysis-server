@@ -36,7 +36,7 @@ def find_connected_component(id: int, nodes: list, edges: list, visited: list, g
     for neighbor_id in neighbors:
         if neighbor_id in gsim:
             """Iclude circle."""
-            edges.append(id, neighbor_id)
+            edges.append((id, neighbor_id))
             if neighbor_id not in visited:
                 find_connected_component(
                     neighbor_id, nodes, edges, visited, graph, gsim)

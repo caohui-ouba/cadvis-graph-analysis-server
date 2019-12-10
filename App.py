@@ -4,7 +4,7 @@ from obtain.data_obtain import get_mock_commutity_graph
 from response.response import Response
 import service.service as service
 from config.logging import config_log
-from algorithm.similar_structure import get_similar_structure
+import json
 # config the log
 config_log()
 
@@ -26,20 +26,13 @@ def get_graph_by_name():
     return Response.success(service.get_graph_by_name(name))
 
 
-@app.route('/get_similar_structure', methods=['GET'])
+@app.route('/get_similar_structure', methods=['POST'])
 def get_similar_struc():
-    """
-    data:{
-        k:10,
-        graph_name:'soc_blog_catalog',
-        nodes:[1,2,3,4,5]
-    }
-    """
-    data = request.get_json()
+    data = json.loads(request.get_data())
     graph_name = data.get('graph_name')
     nodes = data.get('nodes')
     k = data.get('k')
-    return Response.success(get_similar_structure(graph_name, nodes, k))
+    return Response.success(service.get_similar_struc(graph_name, nodes, k))
 
 
 @app.route("/get_community_by_name", methods=['GET'])
