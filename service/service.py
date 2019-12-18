@@ -9,6 +9,7 @@ from sklearn import manifold
 from algorithm.search_community import PyLouvain
 from algorithm.similar_structure import get_similar_structure
 from algorithm.structure_correspond import find_structure_correspond
+import config.task_mapping as TASK_ID
 import logging
 import os
 import pickle
@@ -104,6 +105,7 @@ def decomposition(X: list, n_component: int = 2):
 
 
 def decomposition_by_tsne(X: list, n_component: int = 2):
+
     embeded = manifold.TSNE(n_components=n_component,
                             random_state=1).fit_transform(X)
     return embeded
@@ -111,3 +113,46 @@ def decomposition_by_tsne(X: list, n_component: int = 2):
 
 def sigmoid(X):
     return 1.0 / (1 + np.exp(-X))
+
+
+def doTask(task, container: dict = None):
+    if dict is None:
+        raise AttributeError("container is None in 'doTask'!")
+    """task是一个Task类型的json"""
+    taskId = task.taskId
+    if taskId == TASK_ID.COMMUNITY_DETECT:
+        __checkParam(task, "graph_name")
+        container[taskId] = get_commutity_by_name(task["params"]["graph_name"])
+        __doSubTasks(task, container)
+    elif taskId == TASK_ID.NODE_EMBEDDING:
+        __checkParam(task, "graph_name")
+        container[taskId] = get_graph_by_name(task["params"]["graph_name"])
+        __doSubTasks(task, container)
+    elif taskId == TASK_ID.UNUSUAL_NODE_DETECT:
+        pass
+    elif taskId == TASK_ID.SIMILAR_STRUCTURE:
+        __checkParam(task, "graph_name")
+        __checkParam(task, "nodes")
+        __checkParam(task, "k")
+        container[taskId] = get_graph_by_name(
+            task["params"]["graph_name"], task["params"]["nodes"], task["params"]["k"])
+        __doSubTasks(task, container)
+    elif taskId == TASK_ID.NODE_CORESSPOND:
+        pass
+    else:
+        pass
+
+
+def __doSubTasks(task, container):
+    if "subTasks" in task:
+        for subTask in task["subTasks"]:
+            doTask(subTask, container)
+
+
+def __checkParam(task: dict, paramName: str):
+    if "params" not in task:
+        raise AttributeError(
+            "params is None in '%s' !" % task.taskName)
+    if paramName not in task["params"]:
+        raise AttributeError(
+            "params '%s' is None in 'doTask' of task '%s' !" % (paramName, task.taskName))
