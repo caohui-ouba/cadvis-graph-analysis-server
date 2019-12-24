@@ -20,6 +20,14 @@ def cors(environ):
     return environ
 
 
+@app.route('/doTasks', methods=['POST'])
+def doTasks():
+    task = json.load(request.get_data())
+    res = {}
+    service.doTask(task, res)
+    return Response.success(res)
+
+
 @app.route('/get_graph_by_name', methods=['GET'])
 def get_graph_by_name():
     name = request.args.get("name")
